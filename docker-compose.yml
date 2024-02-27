@@ -1,0 +1,24 @@
+version: "3.7"
+
+services:
+  item-app:
+    image: node:14.21-alpine
+    command: sh -c "npm install --production --unsafe-perm && npm run build && npm start"
+    ports:
+      - 80:8080
+    working_dir: /app
+    volumes:
+      - ./:/app
+    environment:
+      NODE_ENV: production
+      DB_HOST: item-db
+    depends_on:
+      - item-db
+    restart: always
+  item-db:
+    image: mongo:3
+    volumes:
+      - app-db:/data/db
+    restart: unless-stopped
+volumes:
+  app-db:
